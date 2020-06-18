@@ -8723,8 +8723,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../.nvm/versions/node/v13.13.0/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../.nvm/versions/node/v13.13.0/lib/node_modules/browserify/node_modules/is-buffer/index.js":6}],20:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../.nvm/versions/node/v13.13.0/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
+},{"../../../../../.nvm/versions/node/v13.13.0/lib/node_modules/watchify/node_modules/is-buffer/index.js":6}],20:[function(require,module,exports){
 (function (process,Buffer){
 var stream = require('readable-stream')
 var eos = require('end-of-stream')
