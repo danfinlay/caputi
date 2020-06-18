@@ -1,8 +1,8 @@
-import observable from '../src/observable';
-import server from '../src/captp-ws-server';
+const observable = require('../src/observable');
+const server = require('../src/captp-ws-server');
 
 function createCounter () {
-  let count = observable(count, 'number'),
+  let count = observable(0, 'number');
   return {
     count,
     // getters are synchronous locally, but can be converted before being passed to capTP:

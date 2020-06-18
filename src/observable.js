@@ -1,6 +1,6 @@
 const { Mutex } = require('await-semaphore')
 
-export function observable (value, typeInfo) {
+module.exports = function observable (value, typeInfo) {
   let _value = value;
   const mutex = new Mutex();
   const listeners = new Set();
@@ -8,11 +8,12 @@ export function observable (value, typeInfo) {
   return {
 
     get: async () => {
+      console.log(`get called! returning ${_value}`)
       return _value;
     },
 
     set: (value) => {
-
+      console.log(`Set called with ${value}`);
       if (typeInfo) {
         // For now, simple type checking, but later could support enforcing JSON-schema or something!
         if (typeof value !== typeInfo) {
@@ -32,7 +33,7 @@ export function observable (value, typeInfo) {
         throw new Error('Subscribe must receive a function as listener.')
       }
       listeners.add(listener);
-      return async unsubscribe () => {
+      return async () => {
         listeners.remove(listener);
       }
     },

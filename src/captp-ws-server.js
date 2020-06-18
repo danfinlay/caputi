@@ -4,7 +4,7 @@ const http = require('http');
 const websocket = require('websocket-stream')
 const WebSocketServer = require('ws').Server
 
-export function hostWsCapTpServerAtPort (bootstrap, port) {
+module.exports = function hostWsCapTpServerAtPort (bootstrap, port) {
   const server = http.createServer();
   const wss = new WebSocketServer({ server: server })
 
@@ -15,7 +15,7 @@ export function hostWsCapTpServerAtPort (bootstrap, port) {
       const stream = websocket(ws)
       handle(stream, bootstrap);
     })
-  }
+  });
 }
 
 function handle (stream, bootstrap) {
