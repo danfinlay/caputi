@@ -1,50 +1,54 @@
-const { Mutex } = require('await-semaphore')
+const { Mutex } = require('await-semaphore');
 
-module.exports = function observable (value, typeInfo) {
+module.exports = function observable (value) {
   let _value = value;
   const mutex = new Mutex();
   const listeners = new Set();
+  const get = async () => {
+    console.log(`get called! returning ${_value}`)
+    return _value;
+  };
 
-  return {
+  const set = async (value) => {
+    console.log(`Set called with ${value}`);
+    if (typeof value !== typeof _value) {
+      throw new Error(`Value "${value}" is not of required type: ${typeof _value}`);
+    }
 
-    get: async () => {
-      console.log(`get called! returning ${_value}`)
+    _value = value;
+
+    for (let listener of listeners) {
+      listener(_value);
+    }
+
+    return _value;
+  };
+
+  const subscribe = async (listener) => {
+    if (typeof listener !== 'function') {
+      throw new Error('Subscribe must receive a function as listener.')
+    }
+    listeners.add(listener);
+    return async () => {
+      listeners.remove(listener);
+    }
+  };
+
+  const lock = async () => {
+    const release = await mutex.acquire();
+    return async () => {
+      release();
       return _value;
-    },
-
-    set: (value) => {
-      console.log(`Set called with ${value}`);
-      if (typeInfo) {
-        // For now, simple type checking, but later could support enforcing JSON-schema or something!
-        if (typeof value !== typeInfo) {
-          throw new Error(`Value "${value}" is not of required type: ${typeInfo}`);
-        }
-      }
-
-      _value = value;
-
-      for (let listener of listeners) {
-        listener(_value);
-      }
-    },
-
-    subscribe: async (listener) => {
-      if (typeof listener !== 'function') {
-        throw new Error('Subscribe must receive a function as listener.')
-      }
-      listeners.add(listener);
-      return async () => {
-        listeners.remove(listener);
-      }
-    },
-
-    lock: async () => {
-      const release = await mutex.acquire();
-      return async () => {
-        release();
-        return _value;
-      }
     }
   }
-}
 
+  const result = {
+    get,
+    set,
+    subscribe,
+    lock,
+  }
+
+  console.log('produced result', result)
+  return result;
+}
