@@ -2839,6 +2839,8 @@ const client = require('../src/captp-ws-client');
 
 const { E, getBootstrap } = client('ws://localhost:8088');
 
+console.log('loading count')
+
 loadCount()
 .then((count) => {
   console.log(`The count is ${count}!`);
@@ -2851,7 +2853,8 @@ loadCount()
 
 
 async function loadCount () {
-  return E(E(E(getBootstrap()).count).get())
+  console.log('load count called');
+  return E(E.G(getBootstrap()).count).get();
 }
 
 

@@ -57,3 +57,15 @@ Hopefully it will grow to include:
 
 - Some front-end tools for generating responsive UI elements based on capTP presences!
 
+## Running The Example
+
+You may want to re-build the client code with `browserify example/client.js -o example/bundle.js`.
+
+You then should run an http server at the root, like `http-server`.
+
+You will also need to run the server, so run `node example/server.js`.
+
+Then visit whatever port the `http-server` is hosting the client page at.
+
+Currently the example isn't quite working, I am pretty sure I'm mis-using the Eventual-Get method or something.
+
