@@ -13,6 +13,9 @@ interface Observable <T> {
   set: async (newValue) => Observable;
   get: async () => <T>;
 
+  // Takes a listener function as argument, returns an unsubscribe function.
+  subscribe: async(async (updated: <T>) => {}) => async () => {};
+
   // A semaphore is available for all observable values!
   lock: async () => async () => Observable;
 }
