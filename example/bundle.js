@@ -6163,8 +6163,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../.nvm/versions/node/v13.13.0/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
-},{"../../../../../../.nvm/versions/node/v13.13.0/lib/node_modules/watchify/node_modules/is-buffer/index.js":6}],13:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../.nvm/versions/node/v13.13.0/lib/node_modules/watchify/node_modules/is-buffer/index.js")})
+},{"../../../../../.nvm/versions/node/v13.13.0/lib/node_modules/watchify/node_modules/is-buffer/index.js":6}],13:[function(require,module,exports){
 (function (process,Buffer){
 var stream = require('readable-stream')
 var eos = require('end-of-stream')
@@ -9668,13 +9668,15 @@ function wrappy (fn, cb) {
 
 },{}],36:[function(require,module,exports){
 const makeCapTpFromStream = require('captp-stream');
-
-const websocket = require('websocket-stream')
+const websocket = require('websocket-stream');
 
 module.exports = function connectToAddress (address) {
-  const ws = websocket(address, {}, { objectMode: true });
+  const ws = websocket(address, {
+    binary: false,
+    objectMode: true,
+  });
+
   return makeCapTpFromStream('server', ws, {});
 }
-
 
 },{"captp-stream":11,"websocket-stream":33}]},{},[9]);

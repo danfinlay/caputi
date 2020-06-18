@@ -6,13 +6,13 @@ const WebSocketServer = require('ws').Server
 
 module.exports = function hostWsCapTpServerAtPort (bootstrap, port) {
   const server = http.createServer();
-  const wss = new WebSocketServer({ server: server })
+  const wss = new WebSocketServer({
+    server: server,
+  });
 
   server.listen(port, function() {
-    const client = websocket('ws://localhost:' + port)
-
     wss.on('connection', function(ws) {
-      const stream = websocket(ws, {}, { objectMode: true })
+      const stream = websocket(ws, { binary: false, objectMode: true })
       handle(stream, bootstrap);
     })
   });
@@ -21,4 +21,3 @@ module.exports = function hostWsCapTpServerAtPort (bootstrap, port) {
 function handle (stream, bootstrap) {
   const { abort } = makeCapTpFromStream('server', stream, bootstrap);
 }
-
