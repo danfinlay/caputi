@@ -1,4 +1,8 @@
 const makeCapTpFromStream = require('captp-stream');
+const ndjson = require('ndjson');
+const pipeline = require('pumpify');
+const harden = require('@agoric/harden');
+const inspect = require('inspect-stream');
 
 const http = require('http');
 const websocket = require('websocket-stream')
@@ -12,12 +16,14 @@ module.exports = function hostWsCapTpServerAtPort (bootstrap, port) {
 
   server.listen(port, function() {
     wss.on('connection', function(ws) {
-      const stream = websocket(ws, { binary: false, objectMode: true })
+      console.log('New connection!', ws);
+      const stream = websocket(ws, { objectMode: true });
       handle(stream, bootstrap);
     })
   });
 }
 
-function handle (stream, bootstrap) {
-  const { abort } = makeCapTpFromStream('server', stream, bootstrap);
+function handle (ws, bootstrap) {
+  const stream = pipeline.obj(ndjson.serialize(), inspect(), ws, inspect(), ndjson.parse());
+  const { abort } = makeCapTpFromStream('server', stream, harden(bootstrap));
 }
