@@ -1,4 +1,6 @@
-# CapTP UI
+# Caputi
+
+A UI and development framework for CapTP.
 
 An experiment in building some web tools around efficiently building applications that are friendly to easily render over a `capTP` interface!
 
@@ -68,4 +70,3 @@ You will also need to run the server, so run `node example/server.js`.
 Then visit whatever port the `http-server` is hosting the client page at.
 
 Currently the example isn't quite working, I am pretty sure I'm mis-using the Eventual-Get method or something.
-
