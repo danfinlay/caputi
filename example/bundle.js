@@ -2854,6 +2854,14 @@ loadCount()
 
 async function loadCount () {
   console.log('load count called');
+  const boot = getBootstrap();
+  const getter = E.G(boot);
+  const count = getter.count;
+  const caller = E(count);
+  const called = caller.get();
+  const num = await called;
+  return num
+
   return E(E.G(getBootstrap()).count).get();
 }
 
@@ -9664,7 +9672,7 @@ const makeCapTpFromStream = require('captp-stream');
 const websocket = require('websocket-stream')
 
 module.exports = function connectToAddress (address) {
-  const ws = websocket(address, { objectMode: true });
+  const ws = websocket(address, {}, { objectMode: true });
   return makeCapTpFromStream('server', ws, {});
 }
 

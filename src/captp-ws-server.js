@@ -12,7 +12,7 @@ module.exports = function hostWsCapTpServerAtPort (bootstrap, port) {
     const client = websocket('ws://localhost:' + port)
 
     wss.on('connection', function(ws) {
-      const stream = websocket(ws, { objectMode: true })
+      const stream = websocket(ws, {}, { objectMode: true })
       handle(stream, bootstrap);
     })
   });
