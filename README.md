@@ -2,6 +2,8 @@
 
 An experiment in building some web tools around efficiently building applications that are friendly to easily render over a `capTP` interface!
 
+Based on [some notes here](https://roamresearch.com/#/app/danfinlay/page/1xxtcDrhI).
+
 ## Components of note
 
 [observable](./src/observable.js) is a JavaScript function that takes a given value and returns an object that can be consumed as an interface over capTP.
