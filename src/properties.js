@@ -6,14 +6,11 @@ module.exports = function generateProperties (properties) {
 
   for (let name in properties) {
     const property = observable(properties[name]);
-    console.log(`generated observable ${name}: ${JSON.stringify(property)}`)
-    console.log('from value of ', properties[name])
     result[name] = property;
   }
 
   return {
     get: async (name) => {
-      console.log(`Attempting to GET ${name} from ${JSON.stringify(result)}`)
       return result[name].get();
     },
 

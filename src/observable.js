@@ -5,12 +5,10 @@ module.exports = function observable (value) {
   const mutex = new Mutex();
   const listeners = new Set();
   const get = async () => {
-    console.log(`get called! returning ${_value}`)
     return _value;
   };
 
   const set = async (value) => {
-    console.log(`Set called with ${value}`);
     if (typeof value !== typeof _value) {
       throw new Error(`Value "${value}" is not of required type: ${typeof _value}`);
     }
@@ -49,6 +47,5 @@ module.exports = function observable (value) {
     lock,
   }
 
-  console.log('produced result', result)
   return result;
 }

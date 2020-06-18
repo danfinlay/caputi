@@ -16,7 +16,6 @@ module.exports = function hostWsCapTpServerAtPort (bootstrap, port) {
 
   server.listen(port, function() {
     wss.on('connection', function(ws) {
-      console.log('New connection!', ws);
       const stream = websocket(ws, { objectMode: true });
       handle(stream, bootstrap);
     })
