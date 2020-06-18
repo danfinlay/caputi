@@ -29,7 +29,7 @@ function createCounter () {
   return {
     count,
     // getters are synchronous locally, but can be converted before being passed to capTP:
-    increment: async count => count.set(count.get() + 1),
+    increment: async () => count.set(count.get() + 1),
   }
 }
 
