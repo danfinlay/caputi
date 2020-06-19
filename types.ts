@@ -3,8 +3,8 @@ export type PropertyGenerator = (bootstrap: { [key: string]: any }) => Propertie
 export interface Properties {
   get: (key: string) => Promise<any>;
   set: (key: string, value: any) => Promise<any>;
-  subscribe: (key: string, listener: Listener) => RemoveListener;
-  lock: (key: string) => Unlock;
+  subscribe: (key: string, listener: Listener) => Promise<RemoveListener>;
+  lock: (key: string) => Promise<Unlock>;
 }
 
 export type ObservableGenerator = (value: any) => Observable;

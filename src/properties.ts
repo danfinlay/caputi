@@ -1,14 +1,15 @@
 const observable = require('./observable');
+import { Properties } from '../types';
 
-module.exports = function generateProperties (properties) {
+module.exports = function generateProperties (opts: {[key: string]: any}) {
   const result = {};
 
-  for (let name in properties) {
-    const property = observable(properties[name]);
+  for (let name in opts) {
+    const property = observable(opts[name]);
     result[name] = property;
   }
 
-  return {
+  const properties: Properties = {
     get: async (name) => {
       return result[name].get();
     },
@@ -25,4 +26,5 @@ module.exports = function generateProperties (properties) {
       return result[name].lock();
     }
   }
+  return properties;
 }
