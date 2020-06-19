@@ -1,5 +1,5 @@
-const test = require('tape');
 const observable = require('./observable');
+import test from 'tape';
 
 test('a simple number', (t) => {
   const obs = observable(0);

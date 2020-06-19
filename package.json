@@ -8,7 +8,7 @@
     "example": "example"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "ts-node test.ts"
   },
   "author": "",
   "license": "ISC",
@@ -23,8 +23,11 @@
     "ws": "^7.3.0"
   },
   "devDependencies": {
+    "@types/node": "^14.0.13",
+    "@types/tape": "^4.13.0",
     "browserify": "^16.5.1",
     "tape": "^5.0.1",
+    "ts-node": "^8.10.2",
     "typescript": "^3.9.5",
     "watchify": "^3.11.1"
   }
