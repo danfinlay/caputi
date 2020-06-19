@@ -1,9 +1,10 @@
 const { Mutex } = require('await-semaphore');
+import { Observable, Listener, Subscribe, RemoveListener, Lock, Unlock } from '../types';
 
-module.exports = function observable (value) {
+module.exports = function observable (value): Observable {
   let _value = value;
   const mutex = new Mutex();
-  const listeners = new Set();
+  const listeners: Set<Listener> = new Set();
   const get = async () => {
     return _value;
   };
@@ -22,25 +23,27 @@ module.exports = function observable (value) {
     return _value;
   };
 
-  const subscribe = async (listener) => {
+  const subscribe: Subscribe = async (listener) => {
     if (typeof listener !== 'function') {
       throw new Error('Subscribe must receive a function as listener.')
     }
     listeners.add(listener);
-    return async () => {
-      listeners.remove(listener);
+    const remove: RemoveListener = async () => {
+      listeners.delete(listener);
     }
+    return remove;
   };
 
-  const lock = async () => {
+  const lock: Lock = async () => {
     const release = await mutex.acquire();
-    return async () => {
+    const unlock: Unlock = async () => {
       release();
       return _value;
     }
+    return unlock;
   }
 
-  const result = {
+  const result: Observable = {
     get,
     set,
     subscribe,

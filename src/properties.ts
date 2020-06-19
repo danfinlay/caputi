@@ -1,4 +1,3 @@
-const { Mutex } = require('await-semaphore');
 const observable = require('./observable');
 
 module.exports = function generateProperties (properties) {

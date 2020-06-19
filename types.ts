@@ -3,22 +3,25 @@ export type PropertyGenerator = (bootstrap: { [key: string]: any }) => Propertie
 export interface Properties {
   get: (key: string) => Promise<any>;
   set: (key: string, value: any) => Promise<any>;
-  subscribe: (key: string, listener: Listener<any>) => RemoveListener;
+  subscribe: (key: string, listener: Listener) => RemoveListener;
   lock: (key: string) => Unlock;
 }
 
-export type ObservableGenerator = (value: any) => Observable<any>;
+export type ObservableGenerator = (value: any) => Observable;
 
-interface Observable <T> {
-  get: () => Promise<T>;
-  set: (key: T) => Promise<T>;
-  subscribe: (listener: Listener<T>) => RemoveListener;
-  lock: () => Unlock;
+export interface Observable {
+  get: () => Promise<any>;
+  set: (newValue: any) => Promise<any>;
+  subscribe: Subscribe;
+  lock: Lock;
 }
 
-type Listener <T> = (updatedValue: T) => void;
-type RemoveListener = () => void;
-type Unlock = () => void;
+export type Subscribe = (listener: Listener) => Promise<RemoveListener>;
+export type Lock = () => Promise<Unlock>;
+
+export type Listener = (updatedValue: any) => void;
+export type RemoveListener = () => Promise<void>;
+export type Unlock = () => void;
 
 export type CaptpWsServerGenerator = (bootstrap: ServerBootstrap, port: number) => void;
 
