@@ -2,7 +2,7 @@ import { GrainGenerator, PropertyGenerator, CaptpWsClientGenerator, CaptpWsServe
 
 const generateProperties: PropertyGenerator = require('./src/properties.js');
 const grain: GrainGenerator = require('./src/grain.ts');
-const captpWsServer: CaptpWsServerGenerator = require('./src/captp-ws-server.js');
-const captpWsClient: CaptpWsClientGenerator = require('./src/captp-ws-client.js');
+const createServer: CaptpWsServerGenerator = require('./src/captp-ws-server.js');
+const createClient: CaptpWsClientGenerator = require('./src/captp-ws-client.js');
 
-export { generateProperties, grain, captpWsClient, captpWsServer };
+export { generateProperties, grain, createServer, createClient };

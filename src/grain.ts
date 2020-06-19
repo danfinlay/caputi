@@ -1,5 +1,5 @@
 const { Mutex } = require('await-semaphore');
-import { GrainGenerator, Grain, Listener, Subscribe, RemoveListener, Unlock } from 'caputi';
+import { GrainGenerator, Grain, There, Listener, Subscribe, RemoveListener, GetExclusive, Unlock, ExclusiveGrain } from '../types';
 
 const gen: GrainGenerator = function observable (value): Grain {
   let _value = value;
@@ -64,19 +64,32 @@ const gen: GrainGenerator = function observable (value): Grain {
     return unsafeUpdate(value);
   }
 
-  const getExclusive = async () => {
+  function createThere (self): There {
+    const there: There = async (expression: string): Promise<Grain | ExclusiveGrain> => {
+
+      // Do SES magic
+      console.log(`here is where we would ses eval ${expression}`);
+
+      return self;
+    }
+    return there;
+  }
+
+  const getExclusive: GetExclusive = async () => {
     const release = await mutex.acquire();
     const unlock: Unlock = async () => {
       release();
       return getInexclusive();
     }
 
-    return {
+    const grain: ExclusiveGrain = {
       get,
       set: exclusiveSet,
       subscribe,
       release: unlock,
     };
+    grain.there = createThere(grain);
+    return grain;
   }
 
   function getInexclusive () {
@@ -86,6 +99,7 @@ const gen: GrainGenerator = function observable (value): Grain {
       subscribe,
       getExclusive,
     }
+    result.there = createThere(result);
     return result;
   }
 
