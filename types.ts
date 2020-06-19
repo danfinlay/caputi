@@ -1,39 +1,34 @@
-export
-
-export type caputi = {
-  generateProperties: PropertyGenerator,
-  observable: ObservableGenerator,
-  captpWsClient: CaptpWsClientGenerator,
-  captpWsServer: CaptpWsServerGenerator,
-}
-
-export type PropertyGenerator = ({ [key: string]: any }): Properties;
+export type PropertyGenerator = (bootstrap: { [key: string]: any }) => Properties;
 
 export interface Properties {
-  get: async (key: string): any;
-  set: async (key: string, value: any): any;
-  subscribe: async (key: string, listener: Listener<T>): RemoveListener;
-  lock: async (key: string): Unlock;
+  get: (key: string) => Promise<any>;
+  set: (key: string, value: any) => Promise<any>;
+  subscribe: (key: string, listener: Listener<any>) => RemoveListener;
+  lock: (key: string) => Unlock;
 }
 
-export type ObservableGenerator = (value: any): Observable;
+export type ObservableGenerator = (value: any) => Observable<any>;
 
-export interface Observable <T> {
-  get: async (): T;
-  set: async (T): T;
-  subscribe: async (listener: Listener<T>): RemoveListener;
-  lock: async (): Unlock;
+interface Observable <T> {
+  get: () => Promise<T>;
+  set: (key: T) => Promise<T>;
+  subscribe: (listener: Listener<T>) => RemoveListener;
+  lock: () => Unlock;
 }
 
-type Listener <T> = async (updatedValue: T): void;
-type RemoveListener = async (): void;
-type Unlock = async (): void;
+type Listener <T> = (updatedValue: T) => void;
+type RemoveListener = () => void;
+type Unlock = () => void;
 
-export type CaptpWsServerGenerator = (bootstrap: ServerBootstrap, port: number): void;
+export type CaptpWsServerGenerator = (bootstrap: ServerBootstrap, port: number) => void;
 
-export type CaptpWsClientGenerator = (address: string): => Bootstrap;
+export type CaptpWsClientGenerator = (address: string) => CapTpSetup;
 
-export type ServerBootstrap = { [key:string]: () => Promise<any> };
+type CapTpSetup = {
+  getBootstrap: () => HandledPromise;
+  abort: () => void;
+  E: EProxy;
+}
 
 // This does not do justice to the constraints of a server bootstrap. I'm not completely clear on what they are yet, so I'm not refining this yet:
 type ServerBootstrap = Object;
@@ -47,7 +42,7 @@ type Property = string | number | symbol;
 
 interface EHandler<T> {
   get?: (p: T, name: Property) => any;
-  applyMethod?: (p: T, name?: Property, args: unknown[]) => any;
+  applyMethod?: (p: T, name: Property, args: unknown[]) => any;
 }
 
 type HandledExecutor<R> = (
@@ -57,7 +52,7 @@ type HandledExecutor<R> = (
 ) => void;
 
 interface HandledPromiseConstructor {
-  new<R> (executor: HandledExecutor<R>, unfulfilledHandler: EHandler<Promise<unknown>>);
+  new<R> (executor: HandledExecutor<R>, unfulfilledHandler: EHandler<Promise<unknown>>): any;
   prototype: Promise<unknown>;
   applyFunction(target: unknown, args: unknown[]): Promise<unknown>;
   applyFunctionSendOnly(target: unknown, args: unknown[]): void;
@@ -68,10 +63,10 @@ interface HandledPromiseConstructor {
   resolve(target: unknown): Promise<any>;
 }
 
-export const HandledPromise: HandledPromiseConstructor;
+type HandledPromise = HandledPromiseConstructor;
 
 interface ESingleMethod<R = Promise<unknown>> {
-  (...args: unknown[]) => R;
+  (...args: unknown[]): R;
   readonly [prop: string]: (...args: unknown[]) => R;
 }
 
@@ -81,7 +76,7 @@ interface ESingleGet<R = Promise<unknown>> {
 
 interface ESendOnly {
   (x: unknown): ESingleMethod<void>;
-  readonly G(x: unknown): ESingleGet<void>;
+  G(x: unknown): ESingleGet<void>;
 }
 
 interface EProxy {
@@ -104,12 +99,12 @@ interface EProxy {
    * @param {*} x target for property get
    * @returns {ESingleGet} property get proxy
    */
-  readonly G(x: unknown): ESingleGet;
+  G(x: unknown): ESingleGet;
 
   /**
    * E.when(x, res, rej) is equivalent to HandledPromise.resolve(x).then(res, rej)
    */
-  readonly when(
+  when(
     x: unknown,
     onfulfilled?: (value: unknown) => unknown | PromiseLike<unknown>,
     onrejected?: (reason: any) => PromiseLike<never>,
