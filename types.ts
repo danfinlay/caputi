@@ -13,6 +13,7 @@ export interface AbstractGrain {
   get: () => Promise<any>;
   set: (newValue: any) => Promise<any>;
   subscribe: Subscribe;
+  there: (code: string) => Promise<any>;
 }
 
 export interface Grain extends AbstractGrain {

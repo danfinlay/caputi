@@ -104,5 +104,14 @@ test('getExclusive()', { timeout: 1000 }, (t) => {
  
 });
 
+test('.there()', async (t) => {
+  const grain = createGrain(2);
 
+  await grain.there(`value = value * 2`);
+  await grain.there(`value = value * 2`);
+
+  const result = grain.get();
+  t.equals(result, 8, 'should have doubled twice.');
+  t.end();
+});
 

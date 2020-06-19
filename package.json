@@ -20,6 +20,7 @@
     "duplex-json-stream": "^1.0.1",
     "inspect-stream": "^0.1.0",
     "pumpify": "^2.0.1",
+    "ses": "^0.8.0",
     "websocket-stream": "^5.5.2",
     "ws": "^7.3.0"
   },
