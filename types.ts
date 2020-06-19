@@ -7,17 +7,22 @@ export interface Properties {
   lock: (key: string) => Promise<Unlock>;
 }
 
-export type ObservableGenerator = (value: any) => Observable;
+export type GrainGenerator = (value: any) => Grain;
 
-export interface Observable {
+export interface AbstractGrain {
   get: () => Promise<any>;
   set: (newValue: any) => Promise<any>;
   subscribe: Subscribe;
-  lock: Lock;
+}
+
+export interface Grain extends AbstractGrain {
+  getExclusive: () => Promise<ExclusiveGrain>;
+}
+
+export interface ExclusiveGrain extends AbstractGrain {
 }
 
 export type Subscribe = (listener: Listener) => Promise<RemoveListener>;
-export type Lock = () => Promise<Unlock>;
 
 export type Listener = (updatedValue: any) => void;
 export type RemoveListener = () => Promise<void>;

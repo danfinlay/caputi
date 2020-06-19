@@ -1,11 +1,11 @@
-const observable = require('./observable');
+const createGrain = require('./grain');
 import { Properties } from '../types';
 
 module.exports = function generateProperties (opts: {[key: string]: any}) {
   const result = {};
 
   for (let name in opts) {
-    const property = observable(opts[name]);
+    const property = createGrain(opts[name]);
     result[name] = property;
   }
 
