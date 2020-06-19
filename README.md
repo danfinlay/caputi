@@ -1,5 +1,7 @@
 # Caputi
 
+![Caputo from Orange is the New Black. Mostly because of the name, but if you think about it, he's the guy tasked with keeping a jail operating smoothly.](./caputo.jpg)
+
 A UI and development framework for CapTP.
 
 An experiment in building some web tools around efficiently building applications that are friendly to easily render over a `capTP` interface!
