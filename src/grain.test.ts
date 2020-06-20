@@ -179,7 +179,6 @@ test('.there() return values', async (t) => {
   }
 });
 
-/** 
 test('.there() return new function', async (t) => {
   const grain = createGrain(2);
   try {
@@ -198,4 +197,47 @@ test('.there() return new function', async (t) => {
     t.end();
   }
 });
-**/
+
+test('.there() returns atomically safe function', (t) => {
+  const grain = createGrain(2);
+  grain.there(`return () => { value *= 2 }`)
+  .then((double) => {
+
+    double()
+    .catch((reason) => {
+      t.fail(reason);
+      t.end();
+    })
+
+    double()
+    .catch((reason) => {
+      t.fail(reason);
+      t.end();
+    })
+
+    let pass = 1;
+    grain.subscribe(async (val) => {
+      switch (pass) {
+        case 1:
+          pass++;
+          t.equals(val, 4, 'first pass should double to 4');
+          break;
+        case 2:
+          pass++;
+          t.equals(val, 8, 'second pass should double to 8');
+          t.end();
+          break;
+        default:
+          t.fail();
+          t.end();
+          break;
+      }
+    })
+  
+  })
+  .catch((reason) => {
+    t.fail(reason);
+    t.end();
+  });
+});
+

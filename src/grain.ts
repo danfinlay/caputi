@@ -82,16 +82,33 @@ const gen: GrainGenerator = function observable (value): Grain {
 
     const compartment = new Compartment({});
     Reflect.defineProperty(compartment.globalThis, 'value', {
-      value: _value,
-      writable: true,
+      get: () => _value,
+      set: (value) => {
+        unsafeUpdate(value);
+      },
     });
 
     const instructions: string = `(function () {${expression}})();`
-    const result: any = compartment.evaluate(instructions);
+    let result: any = compartment.evaluate(instructions);
 
-    unsafeUpdate(compartment.globalThis.value);
+    if (typeof result === 'function') {
+      result = createSafeFunction(result);
+    }
+
     await release();
     return result;
+  }
+
+  function createSafeFunction (thereResult: Function) {
+    return async (...args) => {
+      const release = await mutex.acquire();
+      let result = thereResult(...args);
+      if (typeof result === 'function') {
+        result = createSafeFunction(result);
+      }
+      await release();
+      return result;
+    }
   }
 
   const getExclusive: GetExclusive = async () => {
