@@ -7,6 +7,14 @@ test('a simple number', (t) => {
   t.end();
 });
 
+test('an object', async (t) => {
+  const grain = createGrain({ foo: 'bar' });
+  await grain.set({ foo: 'baz' });
+  const res = await grain.get();
+  t.equals(res.foo, 'baz');
+  t.end();
+})
+
 test('.get()', async (t) => {
   const grain = createGrain(0);
   grain.get()
