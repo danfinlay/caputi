@@ -1,7 +1,7 @@
 
-export type PropertyGenerator = (bootstrap: { [key: string]: any }) => Properties;
+export type GrainMapGenerator = (bootstrap: { [key: string]: any }) => GrainMap;
 
-export interface Properties {
+export interface GrainMap {
   get: (key: string) => Promise<any>;
   set: (key: string, value: any) => Promise<any>;
   subscribe: (key: string, listener: Listener) => Promise<RemoveListener>;

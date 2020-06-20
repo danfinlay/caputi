@@ -1,7 +1,7 @@
 const createGrain = require('./grain');
-import { Properties } from '../types';
+import { GrainMap } from '../types';
 
-module.exports = function generateProperties (opts: {[key: string]: any}) {
+module.exports = function generateGrainMapGenerator (opts: {[key: string]: any}) {
   const result = {};
 
   for (let name in opts) {
@@ -9,7 +9,7 @@ module.exports = function generateProperties (opts: {[key: string]: any}) {
     result[name] = property;
   }
 
-  const properties: Properties = {
+  const grainMap: GrainMap = {
     get: async (name) => {
       return result[name].get();
     },
@@ -26,5 +26,5 @@ module.exports = function generateProperties (opts: {[key: string]: any}) {
       return result[name].lock();
     }
   }
-  return properties;
+  return grainMap;
 }
