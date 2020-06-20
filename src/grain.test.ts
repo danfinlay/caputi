@@ -178,3 +178,24 @@ test('.there() return values', async (t) => {
     t.end();
   }
 });
+
+/** 
+test('.there() return new function', async (t) => {
+  const grain = createGrain(2);
+  try {
+
+    const add = await grain.there(`return (add) => { value += add}`);
+    t.equal(typeof add, 'function');
+    await add(10);
+    const result = await grain.get();
+    console.log('get got: ', result);
+    t.equals(result, 12);
+
+    t.end();
+
+  } catch (err) {
+    t.fail(err);
+    t.end();
+  }
+});
+**/

@@ -80,16 +80,11 @@ const gen: GrainGenerator = function observable (value): Grain {
   const there: There = async (expression: string): Promise<Grain | ExclusiveGrain> => {
     const release = await mutex.acquire();
 
-    /*
-    let endowments = {
-      value: _value,
-    }
-    */
     const compartment = new Compartment({});
     Reflect.defineProperty(compartment.globalThis, 'value', {
       value: _value,
       writable: true,
-    }) 
+    });
 
     const instructions: string = `(function () {${expression}})();`
     const result: any = compartment.evaluate(instructions);
