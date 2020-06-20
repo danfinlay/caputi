@@ -29,3 +29,16 @@ test('set()', async (t) => {
   t.equals(val, 5);
   t.end();
 });
+
+test('there()', async (t) => {
+  const grainMap = createGrainMap({
+    count: 0,
+    name: 'Bobo',
+  });
+
+  await grainMap.there('name = name + count');
+  const result = await grainMap.get('name');
+  t.equals(result, 'Bobo0', 'should have appended a zero');
+  t.end();
+});
+

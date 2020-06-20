@@ -34,7 +34,7 @@ const gen: GrainGenerator = function observable (value): Grain {
     // that write attempts wait for any outstanding mutex
     const release = await mutex.acquire();
     try {
-      unsafeUpdate(value);
+      syncUpdate(value);
     } catch (err) {
       await release();
       throw err;
@@ -44,23 +44,35 @@ const gen: GrainGenerator = function observable (value): Grain {
     return _value;
   };
 
-  function unsafeUpdate (value) {
+  function syncUpdate (value: any, forceNotify: boolean = false) {
     if (typeof value !== typeof _value) {
       throw new Error(`Value "${value}" is not of required type: ${typeof _value}`);
     }
 
-    // Don't notify listeners if no change is happening:
-    if (equal(value, _value)) {
-      return value;
-    }
-
     _value = value;
-    for (let listener of listeners) {
-      listener(_value);
+
+    // Alert listeners of changes:
+    if (!equal(value, _value) || forceNotify) {
+      notify();
     }
 
     return _value;
- }
+  }
+
+  function silentSyncUpdate (value: any) {
+    if (typeof value !== typeof _value) {
+      throw new Error(`Value "${value}" is not of required type: ${typeof _value}`);
+    }
+
+    _value = value;
+    return _value;
+  }
+
+  function notify () {
+    for (let listener of listeners) {
+      listener(_value);
+    }
+  }
 
   const subscribe: Subscribe = async (listener) => {
     if (typeof listener !== 'function') {
@@ -74,7 +86,7 @@ const gen: GrainGenerator = function observable (value): Grain {
   };
 
   const exclusiveSet = async (value) => {
-    return unsafeUpdate(value);
+    return silentSyncUpdate(value);
   }
 
   const there: There = async (expression: string): Promise<Grain | ExclusiveGrain> => {
@@ -84,7 +96,7 @@ const gen: GrainGenerator = function observable (value): Grain {
     Reflect.defineProperty(compartment.globalThis, 'value', {
       get: () => _value,
       set: (value) => {
-        unsafeUpdate(value);
+        syncUpdate(value);
       },
     });
 
@@ -114,6 +126,7 @@ const gen: GrainGenerator = function observable (value): Grain {
   const getExclusive: GetExclusive = async () => {
     const release = await mutex.acquire();
     const unlock: Unlock = async () => {
+      syncUpdate(_value, true);
       release();
       return getInexclusive();
     }
@@ -122,7 +135,10 @@ const gen: GrainGenerator = function observable (value): Grain {
       get,
       set: exclusiveSet,
       subscribe,
-      release: unlock,
+      release: async () => {
+        unlock();
+        return getInexclusive();
+      },
       there,
     };
     return grain;
