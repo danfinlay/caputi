@@ -10,26 +10,43 @@ Based on [some notes here](https://roamresearch.com/#/app/danfinlay/page/1xxtcDr
 
 ## Components of note
 
-[observable](./src/observable.js) is a JavaScript function that takes a given value and returns an object that can be consumed as an interface over capTP.
+[grain](./src/grain.js) is a JavaScript function that takes a given value and returns an object that can be consumed as an interface over capTP.
 
 ```typescript
-interface Observable <T> {
-  set: async (newValue) => Observable;
+interface Grain <T> {
+  set: async (newValue) => Grain;
   get: async () => <T>;
 
   // Takes a listener function as argument, returns an unsubscribe function.
   subscribe: async(async (updated: <T>) => {}) => async () => {};
 
-  // A semaphore is available for all observable values!
-  lock: async () => async () => Observable;
+  // A semaphore is available for all grain values!
+  getExclusive: async () => async () => ExclusiveGrain;
+
+  // I'll get to this later...
+  there: ThereFunction;
 }
 ```
-This allows a simple construction of objects by simply wrapping any values they need to manage with a call to `observable(value: any, type?: string)`.
+An exclusive grain is just like a normal one, except it has a `release()` function instead of `getExclusive()`, and you can be sure that nothing will change the value except you until you release it.
+
+Only the `set` method on the `ExclusiveGrain` works until all outstanding `ExclusiveGrain` instances have called `release()`.
+
+The `ThereFunction` lets you call atomic operations on the remote value, like this:
+
+```javascript
+const grain = createGrain(1);
+await grain.there(`value * 2`);
+```
+The result of this expression is assigned as the new value for the `grain`.
+
+Rather than needing to use the `getExclusive()` operator to perform this synchronous operation, the `there` function performs the requested operation atomically within the synchronous context of the grain's own value.
+
+Caputi grains are designed so that they can easily be serialized over a network boundary using CapTP. That means both local and remote usage of Caputi Grains make for a nearly identical developer experience! No REST, JSON-RPC, or GraphQL, just pure native JS on both sides of the boundary.
 
 ```javascript
 
 function createCounter () {
-  let count = observable(count, 'number'),
+  let count = grain(count, 'number'),
   return {
     count,
     // getters are synchronous locally, but can be converted before being passed to capTP:
@@ -55,7 +72,7 @@ Anyways, this is early days, but I'm trying to get some basic tools set up for n
 
 - A capTP weboscket server
 - a capTP websocket client
-- The observable method listed above
+- The grain method listed above
 
 Hopefully it will grow to include:
 
