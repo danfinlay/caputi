@@ -1,2 +1,2 @@
-declare function lockdown(): void;
+declare function lockdown(opts: Object): void;
 declare function Compartment(endowments: Object): void;

@@ -106,17 +106,54 @@ test('getExclusive()', { timeout: 1000 }, (t) => {
 
 test('.there()', async (t) => {
   const grain = createGrain(2);
-
   try {
 
     await grain.there(`value * 2`);
     await grain.there(`value * 2`);
 
-    const result = grain.get();
-    t.equals(result, 8, 'should have doubled twice.');
+    const result = await grain.get();
+    t.equal(result, 8, 'should have doubled twice.');
     t.end();
+
   } catch (err) {
-    console.trace(err);
+    t.fail(err);
+    t.end();
   }
+});
+
+test('.there() concurrency', async (t) => {
+  const grain = createGrain(2);
+
+  grain.there(`value * 2`)
+  .catch((err) => {
+    t.fail(err);
+    t.end();
+  });
+
+  grain.there(`value * 2`)
+  .catch((err) => {
+    t.fail(err);
+    t.end();
+  });
+
+ 
+  let pass = 1;
+  grain.subscribe(async (val) => {
+    switch (pass) {
+      case 1:
+        pass++;
+        t.equals(val, 4, 'first pass should double to 4');
+        break;
+      case 2:
+        pass++;
+        t.equals(val, 8, 'second pass should double to 8');
+        t.end();
+        break;
+      default:
+        t.fail();
+        t.end();
+        break;
+    }
+  })
 });
 

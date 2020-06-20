@@ -7,7 +7,7 @@ const ses = require('ses');
 !!ses;
 
 /// <reference types="./types/src/index.d.ts" />
-lockdown();
+lockdown({ mathTaming: 'unsafe' });
 
 const gen: GrainGenerator = function observable (value): Grain {
   let _value = value;
