@@ -130,9 +130,10 @@ test('.there()', async (t) => {
   }
 });
 
-test('.there() concurrency', (t) => {
+test('.there() concurrency', async (t) => {
   const grain = createGrain(2);
 
+  console.log('sending it THERE')
   grain.there(double)
   .catch((err) => {
     t.fail(err);
@@ -197,7 +198,7 @@ test('.there() return new function', async (t) => {
   }
 });
 
-test('.there() returns atomically safe function', (t) => {
+test('.there() returns atomically safe function', async (t) => {
   const grain = createGrain(2);
   grain.there(`return () => { value *= 2 }`)
   .then((double) => {
