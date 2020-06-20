@@ -80,30 +80,21 @@ const gen: GrainGenerator = function observable (value): Grain {
   const there: There = async (expression: string): Promise<Grain | ExclusiveGrain> => {
     const release = await mutex.acquire();
 
+    /*
     let endowments = {
-      values: {value: _value},
+      value: _value,
     }
-    const compartment = new Compartment(endowments);
+    */
+    const compartment = new Compartment({});
+    Reflect.defineProperty(compartment.globalThis, 'value', {
+      value: _value,
+      writable: true,
+    }) 
 
-    for (const key in endowments.values) {
-      setup += `let ${key} = values["${key}"]; `;
-    }
-
-    let teardown = '';
-    for (const key in endowments.values) {
-      teardown += `values["${key}"] = ${key}; `;
-    }
-
-    const retKey = `RESERVED_CAPUTI_RET_KEY`;
-    const instructions: string = `
-      ${setup}
-      const ${retKey} = (function () {${expression}})();
-      ${teardown};
-      ${retKey};
-    `
+    const instructions: string = `(function () {${expression}})();`
     const result: any = compartment.evaluate(instructions);
 
-    unsafeUpdate(endowments.values.value);
+    unsafeUpdate(compartment.globalThis.value);
     await release();
     return result;
   }
