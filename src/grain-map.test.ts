@@ -15,7 +15,6 @@ test('get()', async (t) => {
   });
 
   const val = await grainMap.get('count');
-  console.dir(val)
   t.equals(val, 0);
   t.end();
 });
@@ -27,7 +26,6 @@ test('set()', async (t) => {
 
   t.ok('set' in grainMap);
   const val = await grainMap.set('count', 5);
-  console.dir(val)
   t.equals(val, 5);
   t.end();
 });
