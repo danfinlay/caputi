@@ -8,6 +8,8 @@ An experiment in building some web tools around efficiently building application
 
 Based on [some notes here](https://roamresearch.com/#/app/danfinlay/page/1xxtcDrhI).
 
+Status: Unstable, active development, much documentation is probably missing, but the types are pretty good so it might be usable recreationally under TypeScript.
+
 ## Components of note
 
 [grain](./src/grain.js) is a JavaScript function that takes a given value and returns an object that can be consumed as an interface over capTP.
