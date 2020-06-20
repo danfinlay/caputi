@@ -169,7 +169,7 @@ test('.there() return values', async (t) => {
   const grain = createGrain(2);
   try {
 
-    const result = await grain.there(`value * 5`);
+    const result = await grain.there(`return value * 5`);
     t.equal(result, 10, 'should have multiplied by 5.');
     t.end();
 
