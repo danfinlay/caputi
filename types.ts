@@ -6,6 +6,8 @@ export interface GrainMap {
   set: (key: string, value: any) => Promise<any>;
   subscribe: (key: string, listener: Listener) => Promise<RemoveListener>;
   lock: (key: string) => Promise<Unlock>;
+  getGrain: (key:string) => Promise<Grain>;
+  there?: (code: string) => Promise<any>;
 }
 
 export type GrainGenerator = (value: any) => Grain;
