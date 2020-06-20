@@ -18,7 +18,7 @@
 		"target": "es6",
     "typeRoots": [
       "./node_modules/@types",
-      "./typings"
+      "./types"
     ],
     "paths": {
       "tape": "./node_modules/@types/tape/index.d.ts"

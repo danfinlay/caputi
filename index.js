@@ -1,11 +1,11 @@
 "use strict";
 exports.__esModule = true;
-exports.captpWsServer = exports.captpWsClient = exports.grain = exports.generateProperties = void 0;
+exports.createClient = exports.createServer = exports.grain = exports.generateProperties = void 0;
 var generateProperties = require('./src/properties.js');
 exports.generateProperties = generateProperties;
 var grain = require('./src/grain.ts');
 exports.grain = grain;
-var captpWsServer = require('./src/captp-ws-server.js');
-exports.captpWsServer = captpWsServer;
-var captpWsClient = require('./src/captp-ws-client.js');
-exports.captpWsClient = captpWsClient;
+var createServer = require('./src/captp-ws-server.js');
+exports.createServer = createServer;
+var createClient = require('./src/captp-ws-client.js');
+exports.createClient = createClient;

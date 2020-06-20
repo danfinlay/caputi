@@ -1,5 +1,13 @@
 const { Mutex } = require('await-semaphore');
+const equal = require('deep-equal');
 import { GrainGenerator, Grain, There, Listener, Subscribe, RemoveListener, GetExclusive, Unlock, ExclusiveGrain } from '../types';
+const ses = require('ses');
+
+// To stop typescript from complaining about not using ses:
+!!ses;
+
+/// <reference types="./types/src/index.d.ts" />
+lockdown();
 
 const gen: GrainGenerator = function observable (value): Grain {
   let _value = value;
@@ -41,6 +49,11 @@ const gen: GrainGenerator = function observable (value): Grain {
       throw new Error(`Value "${value}" is not of required type: ${typeof _value}`);
     }
 
+    // Don't notify listeners if no change is happening:
+    if (equal(value, _value)) {
+      return value;
+    }
+
     _value = value;
     for (let listener of listeners) {
       listener(_value);
@@ -66,10 +79,18 @@ const gen: GrainGenerator = function observable (value): Grain {
 
   function createThere (self): There {
     const there: There = async (expression: string): Promise<Grain | ExclusiveGrain> => {
+      const release = await mutex.acquire();
 
       // Do SES magic
-      console.log(`here is where we would ses eval ${expression}`);
+      let value = _value;
+      console.log(`attempting to ses eval ${expression}`);
+      const compartment = new Compartment({
+        value,
+      });
+      const res = compartment.evaluate(expression);
+      unsafeUpdate(res);
 
+      await release();
       return self;
     }
     return there;

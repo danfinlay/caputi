@@ -1,3 +1,4 @@
+
 export type PropertyGenerator = (bootstrap: { [key: string]: any }) => Properties;
 
 export interface Properties {
