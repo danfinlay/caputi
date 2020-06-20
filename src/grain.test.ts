@@ -112,12 +112,13 @@ test('getExclusive()', { timeout: 1000 }, (t) => {
  
 });
 
+const double = 'value *= 2';
 test('.there()', async (t) => {
   const grain = createGrain(2);
   try {
 
-    await grain.there(`value * 2`);
-    await grain.there(`value * 2`);
+    await grain.there(double);
+    await grain.there(double);
 
     const result = await grain.get();
     t.equal(result, 8, 'should have doubled twice.');
@@ -132,13 +133,13 @@ test('.there()', async (t) => {
 test('.there() concurrency', (t) => {
   const grain = createGrain(2);
 
-  grain.there(`value * 2`)
+  grain.there(double)
   .catch((err) => {
     t.fail(err);
     t.end();
   });
 
-  grain.there(`value * 2`)
+  grain.there(double)
   .catch((err) => {
     t.fail(err);
     t.end();
@@ -164,3 +165,16 @@ test('.there() concurrency', (t) => {
   })
 });
 
+test('.there() return values', async (t) => {
+  const grain = createGrain(2);
+  try {
+
+    const result = await grain.there(`value * 5`);
+    t.equal(result, 10, 'should have multiplied by 5.');
+    t.end();
+
+  } catch (err) {
+    t.fail(err);
+    t.end();
+  }
+});

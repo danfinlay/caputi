@@ -77,21 +77,35 @@ const gen: GrainGenerator = function observable (value): Grain {
     return unsafeUpdate(value);
   }
 
-  function createThere (self): There {
-    const there: There = async (expression: string): Promise<Grain | ExclusiveGrain> => {
-      const release = await mutex.acquire();
+  const there: There = async (expression: string): Promise<Grain | ExclusiveGrain> => {
+    const release = await mutex.acquire();
 
-      let value = _value;
-      const compartment = new Compartment({
-        value,
-      });
-      const res = compartment.evaluate(expression);
-      unsafeUpdate(res);
-
-      await release();
-      return self;
+    let endowments = {
+      values: {value: _value},
     }
-    return there;
+    const compartment = new Compartment(endowments);
+
+    for (const key in endowments.values) {
+      setup += `let ${key} = values["${key}"]; `;
+    }
+
+    let teardown = '';
+    for (const key in endowments.values) {
+      teardown += `values["${key}"] = ${key}; `;
+    }
+
+    const retKey = `RESERVED_CAPUTI_RET_KEY`;
+    const instructions: string = `
+      ${setup}
+      const ${retKey} = (function () {${expression}})();
+      ${teardown};
+      ${retKey};
+    `
+    const result: any = compartment.evaluate(instructions);
+
+    unsafeUpdate(endowments.values.value);
+    await release();
+    return result;
   }
 
   const getExclusive: GetExclusive = async () => {
@@ -106,8 +120,8 @@ const gen: GrainGenerator = function observable (value): Grain {
       set: exclusiveSet,
       subscribe,
       release: unlock,
+      there,
     };
-    grain.there = createThere(grain);
     return grain;
   }
 
@@ -117,8 +131,8 @@ const gen: GrainGenerator = function observable (value): Grain {
       set,
       subscribe,
       getExclusive,
+      there,
     }
-    result.there = createThere(result);
     return result;
   }
 
