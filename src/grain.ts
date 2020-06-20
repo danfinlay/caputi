@@ -81,9 +81,7 @@ const gen: GrainGenerator = function observable (value): Grain {
     const there: There = async (expression: string): Promise<Grain | ExclusiveGrain> => {
       const release = await mutex.acquire();
 
-      // Do SES magic
       let value = _value;
-      console.log(`attempting to ses eval ${expression}`);
       const compartment = new Compartment({
         value,
       });

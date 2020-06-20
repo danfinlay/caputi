@@ -121,7 +121,7 @@ test('.there()', async (t) => {
   }
 });
 
-test('.there() concurrency', async (t) => {
+test('.there() concurrency', (t) => {
   const grain = createGrain(2);
 
   grain.there(`value * 2`)
@@ -136,7 +136,6 @@ test('.there() concurrency', async (t) => {
     t.end();
   });
 
- 
   let pass = 1;
   grain.subscribe(async (val) => {
     switch (pass) {
