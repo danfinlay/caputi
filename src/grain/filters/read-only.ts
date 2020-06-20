@@ -1,6 +1,6 @@
-import { ReadOnlyGrain, Grain } from '../../../types';
+import { ReadOnlyGrain, Grain, GrainMap, ReadOnlyGrainMap } from '../../../types';
 
-function readonly (writable: Grain): ReadOnlyGrain {
+export function readonly (writable: Grain): ReadOnlyGrain {
     const result: ReadOnlyGrain = {
         get: writable.get,
         subscribe: writable.get,
@@ -8,4 +8,18 @@ function readonly (writable: Grain): ReadOnlyGrain {
     return result;
 }
 
-module.exports = readonly;
+export function readonlyGrainMap (writable: GrainMap): ReadOnlyGrainMap {
+    const {
+        get,
+        subscribe,
+    } = writable;
+
+    return {
+        get,
+        subscribe,
+        getGrain: async (key: string) => {
+            const grain = await writable.getGrain(key);
+            return readonly(grain);
+        }
+    };
+}

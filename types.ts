@@ -19,13 +19,17 @@ export interface ExclusiveGrain extends AbstractGrain {
   release: () => Promise<Grain>;
 }
 
-export interface GrainMap {
+export interface ReadOnlyGrainMap {
   get: (key: string) => Promise<any>;
-  set: (key: string, value: any) => Promise<any>;
   subscribe: (key: string, listener: Listener) => Promise<RemoveListener>;
+  getGrain: (key:string) => Promise<ReadOnlyGrain>;
+}
+
+export interface GrainMap extends ReadOnlyGrainMap {
+  set: (key: string, value: any) => Promise<any>;
   lock: (key: string) => Promise<Unlock>;
-  getGrain: (key:string) => Promise<Grain>;
   there: (code: string) => Promise<any>;
+  getGrain: (key:string) => Promise<Grain>;
 }
 
 export type GrainMapGenerator = (bootstrap: { [key: string]: any }) => GrainMap;
