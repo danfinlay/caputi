@@ -1,4 +1,4 @@
-const createGrain = require('./grain');
+const createGrain = require('./');
 import test from 'tape';
 
 test('a simple number', (t) => {

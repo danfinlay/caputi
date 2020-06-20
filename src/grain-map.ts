@@ -1,5 +1,5 @@
 const createGrain = require('./grain');
-import { GrainMap, Grain, ExclusiveGrain, There } from '../types';
+import { GrainMap, Grain, ExclusiveGrain } from '../types';
 
 module.exports = function generateGrainMapGenerator (opts: {[key: string]: any}) {
   const grains = {};
@@ -37,7 +37,7 @@ module.exports = function generateGrainMapGenerator (opts: {[key: string]: any})
     return result;
   }
 
-  const there: There = async (expression: string): Promise<Grain | ExclusiveGrain> => {
+  const there = async (expression: string): Promise<Grain | ExclusiveGrain> => {
     const grainMap = await getExclusiveGrainMap();
     const values: { [key:string]: any } = await getLocalMap(grainMap);
 

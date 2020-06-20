@@ -1,6 +1,6 @@
 const { Mutex } = require('await-semaphore');
 const equal = require('deep-equal');
-import { GrainGenerator, Grain, There, Listener, Subscribe, RemoveListener, GetExclusive, Unlock, ExclusiveGrain } from '../types';
+import { GrainGenerator, Grain, Listener, RemoveListener, Unlock, ExclusiveGrain } from '../../types';
 const ses = require('ses');
 
 // To stop typescript from complaining about not using ses:
@@ -74,7 +74,7 @@ const gen: GrainGenerator = function observable (value): Grain {
     }
   }
 
-  const subscribe: Subscribe = async (listener) => {
+  const subscribe = async (listener) => {
     if (typeof listener !== 'function') {
       throw new Error('Subscribe must receive a function as listener.')
     }
@@ -86,10 +86,11 @@ const gen: GrainGenerator = function observable (value): Grain {
   };
 
   const exclusiveSet = async (value) => {
-    return silentSyncUpdate(value);
+    silentSyncUpdate(value);
+    return
   }
 
-  const there: There = async (expression: string): Promise<Grain | ExclusiveGrain> => {
+  const there = async (expression: string): Promise<Grain | ExclusiveGrain> => {
     const release = await mutex.acquire();
 
     const compartment = new Compartment({});
@@ -123,7 +124,7 @@ const gen: GrainGenerator = function observable (value): Grain {
     }
   }
 
-  const getExclusive: GetExclusive = async () => {
+  const getExclusive = async () => {
     const release = await mutex.acquire();
     const unlock: Unlock = async () => {
       syncUpdate(_value, true);

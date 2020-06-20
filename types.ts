@@ -1,5 +1,23 @@
+export interface ReadOnlyGrain {
+  get: () => Promise<any>;
+  subscribe: (listener: Listener) => Promise<RemoveListener>;
+}
 
-export type GrainMapGenerator = (bootstrap: { [key: string]: any }) => GrainMap;
+export type Listener = (updatedValue: any) => void;
+export type RemoveListener = () => void;
+
+export interface AbstractGrain extends ReadOnlyGrain {
+  set: (newValue: any) => Promise<any>;
+  there: (expression: string) => Promise<Grain | ExclusiveGrain>;
+}
+
+export interface Grain extends AbstractGrain {
+  getExclusive: () => Promise<ExclusiveGrain>;
+}
+
+export interface ExclusiveGrain extends AbstractGrain {
+  release: () => Promise<Grain>;
+}
 
 export interface GrainMap {
   get: (key: string) => Promise<any>;
@@ -7,34 +25,12 @@ export interface GrainMap {
   subscribe: (key: string, listener: Listener) => Promise<RemoveListener>;
   lock: (key: string) => Promise<Unlock>;
   getGrain: (key:string) => Promise<Grain>;
-  there?: (code: string) => Promise<any>;
+  there: (code: string) => Promise<any>;
 }
 
+export type GrainMapGenerator = (bootstrap: { [key: string]: any }) => GrainMap;
 export type GrainGenerator = (value: any) => Grain;
 
-export interface AbstractGrain {
-  get: () => Promise<any>;
-  set: (newValue: any) => Promise<any>;
-  subscribe: Subscribe;
-  there?: (code: string) => Promise<any>;
-}
-
-export type GetExclusive = () => Promise<ExclusiveGrain>;
-
-export type There = (expression: string) => Promise<Grain | ExclusiveGrain>;
-
-export interface Grain extends AbstractGrain {
-  getExclusive: GetExclusive;
-}
-
-export interface ExclusiveGrain extends AbstractGrain {
-  release: () => Promise<Grain>;
-}
-
-export type Subscribe = (listener: Listener) => Promise<RemoveListener>;
-
-export type Listener = (updatedValue: any) => void;
-export type RemoveListener = () => Promise<void>;
 export type Unlock = () => Promise<Grain>;
 
 export type CaptpWsServerGenerator = (bootstrap: ServerBootstrap, port: number) => void;
