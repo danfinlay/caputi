@@ -1,6 +1,15 @@
 const { Mutex } = require('await-semaphore');
 const equal = require('deep-equal');
-import { GrainGenerator, Grain, Listener, RemoveListener, Unlock, ExclusiveGrain } from '../../types';
+import {
+  GrainGenerator,
+  Grain,
+  Listener,
+  RemoveListener,
+  Unlock,
+  ExclusiveGrain,
+  Compartment,
+  lockdown,
+} from '../types';
 const ses = require('ses');
 
 // To stop typescript from complaining about not using ses:
@@ -160,3 +169,5 @@ const gen: GrainGenerator = function observable (value): Grain {
 }
 
 module.exports = gen;
+
+  

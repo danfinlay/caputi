@@ -13,16 +13,13 @@
 		"outDir": "dist",
 		"removeComments": false,
 		"sourceMap": false,
-		"inlineSources": true,
+		"inlineSources": false,
 		"strict": true,
 		"target": "es6",
     "typeRoots": [
       "./node_modules/@types",
       "./types"
-    ],
-    "paths": {
-      "tape": "./node_modules/@types/tape/index.d.ts"
-    }
+    ]
 	},
 	"typedocOptions": {
 		"exclude": "**/*.test.ts",
@@ -37,6 +34,6 @@
     "useSourceMap": false
   },
 	"include": [
-		"./index.ts"
+		"./src/**/*.ts"
 	]
 }

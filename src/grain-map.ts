@@ -1,5 +1,7 @@
 const createGrain = require('./grain');
-import { GrainMap, Grain, ExclusiveGrain } from '../types';
+import { GrainMap, Grain, ExclusiveGrain, Compartment } from './types';
+
+
 
 module.exports = function generateGrainMapGenerator (opts: {[key: string]: any}) {
   const grains = {};

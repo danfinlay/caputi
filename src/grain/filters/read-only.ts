@@ -1,4 +1,4 @@
-import { ReadOnlyGrain, Grain, GrainMap, ReadOnlyGrainMap } from '../../../types';
+import { ReadOnlyGrain, Grain, GrainMap, ReadOnlyGrainMap } from '../../types';
 
 export function readonly (writable: Grain): ReadOnlyGrain {
     const result: ReadOnlyGrain = {

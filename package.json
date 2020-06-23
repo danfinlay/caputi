@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "ts-node test.ts --files",
-    "build": "tsc index.ts"
+    "build": "rm -rf dist && tsc"
   },
   "author": "",
   "license": "ISC",
