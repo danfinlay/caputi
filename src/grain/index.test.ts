@@ -133,7 +133,6 @@ test('.there()', async (t) => {
 test('.there() concurrency', async (t) => {
   const grain = createGrain(2);
 
-  console.log('sending it THERE')
   grain.there(double)
   .catch((err) => {
     t.fail(err);
