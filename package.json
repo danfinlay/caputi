@@ -1,9 +1,9 @@
 {
   "name": "caputi",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/types.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/types.ts",
   "directories": {
     "example": "example"
   },
