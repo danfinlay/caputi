@@ -8,7 +8,7 @@
     "example": "example"
   },
   "scripts": {
-    "test": "ts-node test.ts --files",
+    "test": "ts-node src/index.test.ts --files",
     "build": "rm -rf dist && tsc"
   },
   "author": "",
