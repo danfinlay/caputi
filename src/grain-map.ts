@@ -1,5 +1,5 @@
 const createGrain = require('./grain');
-import { GrainMap, Grain, ExclusiveGrain, Compartment } from './types';
+import { GrainMap, Grain, ExclusiveGrain } from '../types';
 
 
 

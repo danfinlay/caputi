@@ -134,10 +134,3 @@ interface EProxy {
   readonly sendOnly: ESendOnly;
 }
 
-export declare var lockdown: Function;
-export declare class Compartment {
-  constructor(endowments: Object);
-  evaluate(command: string): any;
-  globalThis: any;
-}
-

@@ -1,6 +1,6 @@
 {
   "name": "caputi",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/types.ts",
@@ -8,7 +8,7 @@
     "example": "example"
   },
   "scripts": {
-    "test": "ts-node src/index.test.ts --files",
+    "test": "ts-node --files src/index.test.ts",
     "build": "rm -rf dist && tsc"
   },
   "author": "",

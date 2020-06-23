@@ -1,4 +1,4 @@
-import { GrainGenerator, GrainMapGenerator, CaptpWsClientGenerator, CaptpWsServerGenerator } from './types';
+import { GrainGenerator, GrainMapGenerator, CaptpWsClientGenerator, CaptpWsServerGenerator } from '../types';
 import { readonly } from './grain/filters/read-only';
 
 const grainMap: GrainMapGenerator = require('./grain-map.js');
