@@ -43,6 +43,19 @@ await exclusive.release();
 
 As you can see, a simple JS value of any type becomes an object with pretty standard async getters and setters, and a notion of "exclusive" locks for writes that depend on current values, like an increment function.
 
+This pattern is designed to make it easy to share access or partial access to a value with others, either other modules in the same context, or other agents over a CapTP partition. For example, caputi also ships with a simple `readonly` function that accepts a grain and returns a read-only version of that grain:
+
+```javascript
+const { grain, readonly } = require('caputi');
+
+const name = grain('Dan');
+const readable = readonly(name);
+
+await readable.write('Bob');
+// Error: write is not found on this object.
+```
+Caputi also exports a `readonlyGrainMap` function for attenuating a `GrainMap`.
+
 Additionally, I've included a `.there()` function, a concept described to me by Mark Miller, which allows the consumer to write a fully synchronous snippet of code that will be executed in the object's environment:
 
 ```javascript
