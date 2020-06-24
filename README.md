@@ -2,9 +2,11 @@
 
 ![Splash image: Caputo from Orange is the New Black. Mostly because of the name, but if you think about it, he's the guy tasked with keeping a jail operating smoothly.](./caputo.jpg)
 
-A development framework for CapTP, based on [some notes here](https://roamresearch.com/#/app/danfinlay/page/1xxtcDrhI).
+A development framework for [CapTP](https://github.com/Agoric/agoric-sdk/tree/master/packages/captp), based on [some notes here](https://roamresearch.com/#/app/danfinlay/page/1xxtcDrhI).
 
 Status: Unstable, active development, much documentation is probably missing, but decent TS so it might be usable for fun.
+
+Should be convenient to use with my related modules: [captp-stream](https://github.com/danfinlay/captp-stream) (features a nice CapTP intro in its readme) or [node websocket captp](https://github.com/danfinlay/node-ws-captp).
 
 ## Installation
 
