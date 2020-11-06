@@ -30,6 +30,16 @@ test('set()', async (t) => {
   t.end();
 });
 
+test('set() a non-present key', async (t) => {
+  const grainMap = createGrainMap({
+  });
+
+  t.ok('set' in grainMap);
+  const val = await grainMap.set('count', 5);
+  t.equals(val, 5);
+  t.end();
+});
+
 test('there()', async (t) => {
   const grainMap = createGrainMap({
     count: 0,

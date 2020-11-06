@@ -99,7 +99,12 @@ module.exports = function generateGrainMapGenerator (opts: {[key: string]: any})
     },
 
     set: async (name, value) => {
-      return grains[name].set(value);
+      if (grains[name]) {
+        return grains[name].set(value);
+      } else {
+        grains[name] = createGrain(value);
+        return grains[name].set(value);
+      }
     },
 
     subscribe: async (name, listener) => {
